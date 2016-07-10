@@ -36,14 +36,17 @@ public class SphereBehaviour : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//Todo : Separate control concern to SphereController.cs
-		if (Input.GetButtonUp ("Jump")){
-			attached    = !attached;
-            float angle = GetAngle(new Vector2(x,y));
-            
-            direction   = GetDirecton(angle);
-            rb.velocity = direction * 15/radius;
-            Debug.Log(direction);
-		}
+		if (Input.GetMouseButtonDown(0))
+			detach();
+		
+    }
+
+    void detach() {
+        float angle = GetAngle(new Vector2(x,y));
+        attached    = !attached;
+        direction   = GetDirecton(angle);
+        rb.velocity = direction * 15/radius;
+        Debug.Log(direction);
     }
 
     void FixedUpdate() {
