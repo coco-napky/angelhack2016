@@ -12,7 +12,7 @@ public class CameraBehaviour : MonoBehaviour {
 	public float speed = 100000f;
 	private float length;
 	private float startTime;
-
+	private float minY = 0;
 	// Use this for initialization	
 	void Start () {
 		speed = 75;
@@ -24,7 +24,8 @@ public class CameraBehaviour : MonoBehaviour {
 	}
 
 	public void SetMovement(Vector3 destiny) {
-		this.destiny = new Vector3(destiny.x, destiny.y + offset, -10);
+		float nextValueY = destiny.y > (transform.position.y) ? destiny.y + offset : transform.position.y;
+		this.destiny = new Vector3(destiny.x, nextValueY, -10);
 		origin       = transform.position;
 		startTime    = Time.time;
 		length       = Vector3.Distance(origin, destiny);
