@@ -12,7 +12,7 @@ public class SphereBehaviour : MonoBehaviour {
 	public float z;
 	public bool attached;
 
-	private Vector2 direction; 
+	private Vector2 direction;
 	private Rigidbody2D rb;
 	private Vector2 center;
 
@@ -21,13 +21,12 @@ public class SphereBehaviour : MonoBehaviour {
 	public Color colorVida0;
 	public bool b;
 
-	public PlanetAttributes startPlanet;    
+	public PlanetAttributes startPlanet;
 	public CameraBehaviour camera;
 
 	public Vector3 gizmo;
 	public Color asad;
 	void Start () {
-		Cursor.visible = false;
 		startPlanet.actual = colorPlaneta;
 		attached = true;
 		seconds  = 2f;
@@ -65,7 +64,7 @@ public class SphereBehaviour : MonoBehaviour {
 	}
 
 	void Move() {
-		if (attached) {   
+		if (attached) {
 			currentAngle += Time.deltaTime  * speed;
 			x = center.x + Mathf.Cos (currentAngle) * radius;
 			y = center.y + Mathf.Sin (currentAngle) * radius;
@@ -125,6 +124,6 @@ public class SphereBehaviour : MonoBehaviour {
 			break;
 		}
 	}
-		
-	
+
+
 }
