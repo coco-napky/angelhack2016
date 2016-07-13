@@ -2,22 +2,32 @@
 using System.Collections;
 
 public class PlanetAttributes : MonoBehaviour {
+	public float radius;
+  public Vector2 center;
 
-	private float radius;
-	public float radiusOffset;
-	public float speed;
-
-	public Color actual;
-
-	// Use this for initialization
-	void Start () {
-		actual = new Color ();
-		//actual = this.GetComponent<Renderer> ().material.color;
-		radius = transform.localScale.x - (transform.localScale.x * 0.375f);
+	//This happens before Start()
+	void Awake() {
+		SetCenter();
+		SetRadius();
 	}
 
-	void Update(){
-		if(actual.r != 0)
-			this.GetComponent<Renderer>().material.color = actual;
+	void FixedUpdate() {
+		SetCenter();
+	}
+
+	public void SetColor(Color color) {
+		GetComponent<Renderer>().material.color = color;
+	}
+
+	void SetCenter() {
+		float x = GetComponent<Renderer>().bounds.center.x,
+		      y = GetComponent<Renderer>().bounds.center.y;
+
+		if(x != center.x && y != center.y)
+			center  = new Vector2(x,y);
+	}
+
+	void SetRadius() {
+		radius  = GetComponent<Renderer>().bounds.size.y/2 + 0.5f;
 	}
 }

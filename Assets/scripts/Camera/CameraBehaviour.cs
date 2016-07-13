@@ -4,19 +4,15 @@ using System.Collections;
 public class CameraBehaviour : MonoBehaviour {
 
 	public GameObject player;
-	
 	public float offset;
 	public Vector3 destiny;
 	public Vector3 origin;
 	public bool moving = false;
-	public float speed = 100000f;
-	private float length;
-	private float startTime;
-	private float minY = 0;
-	// Use this for initialization	
+	public float speed;
+	private float length,startTime;
+	// Use this for initialization
 	void Start () {
 		speed = 75;
-		
 	}
 
 	void LateUpdate() {
@@ -33,10 +29,10 @@ public class CameraBehaviour : MonoBehaviour {
 	}
 
 	void Move() {
-		if(moving){
-			float distCovered = (Time.time - startTime) * speed;
-		    float fracJourney = distCovered / length;
-		    transform.position = Vector3.Lerp(origin, destiny, fracJourney);
-		}
+		if(!moving) return;
+		
+		float distCovered = (Time.time - startTime) * speed;
+    float fracJourney = distCovered / length;
+    transform.position = Vector3.Lerp(origin, destiny, fracJourney);
 	}
 }

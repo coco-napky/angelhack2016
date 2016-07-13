@@ -2,61 +2,35 @@
 using System.Collections;
 
 public class SphereBehaviour : MonoBehaviour {
+	//THIS IS IN RADIANS
+	private float x,y,z,speed,currentAngle = 0;
+	private bool attached;
 
-	public float currentAngle = 0;
-	public float speed;
-	public float seconds;
-	public float radius;
-	public float x;
-	public float y;
-	public float z;
-	public bool attached;
-
-	private Vector2 direction;
 	private Rigidbody2D rb;
-	private Vector2 center;
+	private Color color;
+	public CameraBehaviour _camera;
+	public PlanetAttributes currentPlanet;
+	private Vector2 direction;
 
-	public Color colorPlaneta;
-	public Color colorVida1;
-	public Color colorVida0;
-	public bool b;
-
-	public PlanetAttributes startPlanet;
-	public CameraBehaviour camera;
-
-	public Vector3 gizmo;
-	public Color asad;
 	void Start () {
-		startPlanet.actual = colorPlaneta;
-		attached = true;
-		seconds  = 2f;
 		z        = 10;
-		b        = true;
 		rb       = GetComponent<Rigidbody2D>();
-		float planet_x = startPlanet.GetComponent<Renderer>().bounds.center.x;
-		float planet_y = startPlanet.GetComponent<Renderer>().bounds.center.y;
-		this.center = new Vector2(planet_x, planet_y);
-		this.radius = startPlanet.GetComponent<Renderer>().bounds.size.y/2 + 0.5f;
-		speed = (2*Mathf.PI)/radius;
-
-		asad = new Color();
-		ColorUtility.TryParseHtmlString ("#FF1744FF", out asad);
-		startPlanet.GetComponent<Renderer>().material.color = asad;
+		color    = GetComponent<Renderer>().material.color;
+		SetCurrentPlanet(currentPlanet.gameObject, null);
 	}
 
-	// Update is called once per frame
 	void Update () {
-		//Todo : Separate control concern to SphereController.cs
+		//TODO : Separate control concern to SphereController.cs
 		if (Input.GetMouseButtonDown(0))
-			detach();
-
+			Detach();
 	}
 
-	void detach() {
+	public void Detach() {
 		float angle = GetAngle(new Vector2(x,y));
+		//TODO: Mechanics to return to currentPlanet
 		attached    = !attached;
 		direction   = GetDirecton(angle);
-		rb.velocity = direction * 15/radius;
+		rb.velocity = direction * 15/currentPlanet.radius;
 	}
 
 	void FixedUpdate() {
@@ -64,21 +38,19 @@ public class SphereBehaviour : MonoBehaviour {
 	}
 
 	void Move() {
-		if (attached) {
-			currentAngle += Time.deltaTime  * speed;
-			x = center.x + Mathf.Cos (currentAngle) * radius;
-			y = center.y + Mathf.Sin (currentAngle) * radius;
-			transform.position = new Vector3(x, y, z);
+		if(!attached) return;
 
-			if(Mathf.Abs(rb.velocity.x ) > 0.1f || Mathf.Abs(rb.velocity.y ) > 0.1f)
-				rb.velocity = new Vector2(0,0);
-		}
+		x = currentPlanet.center.x + Mathf.Cos (currentAngle) * currentPlanet.radius;
+		y = currentPlanet.center.y + Mathf.Sin (currentAngle) * currentPlanet.radius;
+		transform.position = new Vector3(x, y, z);
+		currentAngle += Time.deltaTime  * speed;
+		rb.velocity = Vector2.zero;
 	}
 
+	//Gets the angle formed by a given point and the center of currentPlanet
 	float GetAngle(Vector2 point) {
-		float deltaX = point.x - center.x;
-		float deltaY = point.y - center.y;
-
+		float deltaX = point.x - currentPlanet.center.x;
+		float deltaY = point.y - currentPlanet.center.y;
 		return Mathf.Atan2(deltaY, deltaX) * 180/ Mathf.PI;
 	}
 
@@ -87,43 +59,37 @@ public class SphereBehaviour : MonoBehaviour {
 	}
 
 	void OnCollisionEnter2D(Collision2D collision){
+		if(attached) return;
 
-		GameObject planet = collision.gameObject;
-		Debug.Log("Collision : " + planet.tag);
-
-		if(!attached)
-			switch(planet.tag){
-		case "Planet":
-			colorPlaneta = new Color ();
-			ColorUtility.TryParseHtmlString ("#FF1744FF", out colorPlaneta);
-			planet.GetComponent<PlanetAttributes> ().actual = colorPlaneta;
-			attached = true;
-			float planet_x = planet.GetComponent<Renderer>().bounds.center.x;
-			float planet_y = planet.GetComponent<Renderer>().bounds.center.y;
-			this.center = new Vector2(planet_x, planet_y);
-			this.radius = planet.GetComponent<Renderer>().bounds.size.y/2 + 0.5f;
-			currentAngle += 3;
-			speed = (2*Mathf.PI)/radius;
-			rb.velocity = new Vector2(0,0);
-
-			camera.SetMovement(transform.position);
-
-			//contacts
-			foreach (ContactPoint2D contact in collision.contacts) {
-
-				var point = contact.point;
-				var deltaX = point.x - planet_x;
-				var deltaY = point.y - planet_y;
-				currentAngle = Mathf.Atan2(deltaY, deltaX);
-
-			}
+		GameObject gameObject = collision.gameObject;
+		switch(gameObject.tag){
+			case "Planet":
+				SetCurrentPlanet(gameObject, collision);
 			break;
 			case "Block":
-				BlockAttributes block = planet.GetComponent<BlockAttributes>();
-				block.ReceiceDamage ();
+					BlockAttributes block = gameObject.GetComponent<BlockAttributes>();
+					block.ReceiveDamage ();
 			break;
 		}
 	}
 
+	void SetCurrentPlanet(GameObject gameObject, Collision2D collision) {
+		currentPlanet = gameObject.GetComponent<PlanetAttributes>();
+		currentPlanet.SetColor(color);
 
+		attached = true;
+		speed = (2*Mathf.PI)/currentPlanet.radius;
+		rb.velocity = Vector2.zero;
+		_camera.SetMovement(transform.position);
+
+		if(collision == null) return;
+
+		//Sets currentAngle on contact point of collisioned planet
+		foreach (ContactPoint2D contact in collision.contacts) {
+			var point = contact.point;
+			var deltaX = point.x - currentPlanet.center.x;
+			var deltaY = point.y - currentPlanet.center.y;
+			currentAngle = Mathf.Atan2(deltaY, deltaX);
+		}
+	}
 }
