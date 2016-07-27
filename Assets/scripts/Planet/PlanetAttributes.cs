@@ -3,7 +3,8 @@ using System.Collections;
 
 public class PlanetAttributes : MonoBehaviour {
 	public float radius;
-  public Vector2 center;
+    public Vector2 center;
+    public bool visited = false;
 
 	//This happens before Start()
 	void Awake() {
@@ -11,7 +12,8 @@ public class PlanetAttributes : MonoBehaviour {
 		SetRadius();
 	}
 
-	void FixedUpdate() {
+
+    void FixedUpdate() {
 		SetCenter();
 	}
 
