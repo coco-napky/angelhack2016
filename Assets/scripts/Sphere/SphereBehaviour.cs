@@ -76,6 +76,7 @@ public class SphereBehaviour : MonoBehaviour {
 	void SetCurrentPlanet(GameObject gameObject, Collision2D collision) {
 		currentPlanet = gameObject.GetComponent<PlanetAttributes>();
 		currentPlanet.SetColor(color);
+	    currentPlanet.visited = true;
 
 		attached = true;
 		speed = (2*Mathf.PI)/currentPlanet.radius;
