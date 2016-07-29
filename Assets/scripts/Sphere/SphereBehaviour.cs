@@ -4,7 +4,7 @@ using System.Collections;
 public class SphereBehaviour : MonoBehaviour {
 	//THIS IS IN RADIANS
 	private float x,y,z,speed,currentAngle = 0;
-	private bool attached;
+	private bool attached, fallbackCooldown;
 
 	private Rigidbody2D rb;
 	private Color color;
@@ -20,15 +20,25 @@ public class SphereBehaviour : MonoBehaviour {
 	}
 
 	void Update () {
-		//TODO : Separate control concern to SphereController.cs
-		if (Input.GetMouseButtonDown(0))
-			Detach();
+		if (Input.GetMouseButtonDown(0)){
+			if(attached)
+				Detach();
+			else
+				Fallback();
+		}
+	}
+
+	public void Fallback(){
+		if(fallbackCooldown) return;
+
+		//TODO: This is a placeholder fallback mechanic
+		attached = fallbackCooldown= true;
 	}
 
 	public void Detach() {
 		float angle = GetAngle(new Vector2(x,y));
 		//TODO: Mechanics to return to currentPlanet
-		attached    = !attached;
+		attached    = false;
 		direction   = GetDirecton(angle);
 		rb.velocity = direction * 15/currentPlanet.radius;
 	}
@@ -68,7 +78,7 @@ public class SphereBehaviour : MonoBehaviour {
 			break;
 			case "Block":
 					BlockAttributes block = gameObject.GetComponent<BlockAttributes>();
-					block.ReceiveDamage ();
+					block.ReceiveDamage();
 			break;
 		}
 	}
@@ -76,7 +86,14 @@ public class SphereBehaviour : MonoBehaviour {
 	void SetCurrentPlanet(GameObject gameObject, Collision2D collision) {
 		currentPlanet = gameObject.GetComponent<PlanetAttributes>();
 		currentPlanet.SetColor(color);
-	    currentPlanet.visited = true;
+
+		//TODO: FIX THIS
+		Debug.Log("Fallback Before : " + fallbackCooldown);
+		fallbackCooldown = currentPlanet.visited == true || !fallbackCooldown;
+		Debug.Log("Fallback After : " + fallbackCooldown);
+		Debug.Log("Visited : " + fallbackCooldown);
+		Debug.Log("------------------------------------------------");
+	  currentPlanet.visited = true;
 
 		attached = true;
 		speed = (2*Mathf.PI)/currentPlanet.radius;
