@@ -85,14 +85,8 @@ public class SphereBehaviour : MonoBehaviour {
 
 	void SetCurrentPlanet(GameObject gameObject, Collision2D collision) {
 		currentPlanet = gameObject.GetComponent<PlanetAttributes>();
+		fallbackCooldown = currentPlanet.visited && fallbackCooldown;
 		currentPlanet.SetColor(color);
-
-		//TODO: FIX THIS
-		Debug.Log("Fallback Before : " + fallbackCooldown);
-		fallbackCooldown = currentPlanet.visited == true || !fallbackCooldown;
-		Debug.Log("Fallback After : " + fallbackCooldown);
-		Debug.Log("Visited : " + fallbackCooldown);
-		Debug.Log("------------------------------------------------");
 	  currentPlanet.visited = true;
 
 		attached = true;
