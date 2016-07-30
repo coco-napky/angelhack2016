@@ -4,19 +4,21 @@ using System.Collections;
 public class SphereBehaviour : MonoBehaviour {
 	//THIS IS IN RADIANS
 	private float x,y,z,speed,currentAngle = 0;
-	private bool attached, fallbackCooldown;
-
-	private Rigidbody2D rb;
+	public bool attached;
+	public Rigidbody2D rb;
 	private Color color;
 	public CameraBehaviour _camera;
 	public PlanetAttributes currentPlanet;
-	private Vector2 direction;
+	public Vector2 direction;
+	private Fallback fb;
 
 	void Start () {
 		z        = 10;
 		rb       = GetComponent<Rigidbody2D>();
+		fb       = GetComponent<Fallback>();
 		color    = GetComponent<Renderer>().material.color;
 		SetCurrentPlanet(currentPlanet.gameObject, null);
+
 	}
 
 	void Update () {
@@ -24,20 +26,12 @@ public class SphereBehaviour : MonoBehaviour {
 			if(attached)
 				Detach();
 			else
-				Fallback();
+				fb.Act();
 		}
-	}
-
-	public void Fallback(){
-		if(fallbackCooldown) return;
-
-		//TODO: This is a placeholder fallback mechanic
-		attached = fallbackCooldown= true;
 	}
 
 	public void Detach() {
 		float angle = GetAngle(new Vector2(x,y));
-		//TODO: Mechanics to return to currentPlanet
 		attached    = false;
 		direction   = GetDirecton(angle);
 		rb.velocity = direction * 15/currentPlanet.radius;
@@ -85,7 +79,7 @@ public class SphereBehaviour : MonoBehaviour {
 
 	void SetCurrentPlanet(GameObject gameObject, Collision2D collision) {
 		currentPlanet = gameObject.GetComponent<PlanetAttributes>();
-		fallbackCooldown = currentPlanet.visited && fallbackCooldown;
+		fb.cooldown = currentPlanet.visited && fb.cooldown;
 		currentPlanet.SetColor(color);
 	  currentPlanet.visited = true;
 
