@@ -12,9 +12,12 @@ public class Fallback : MonoBehaviour {
 
 	void Awake () {
 		sphere = GetComponent<SphereBehaviour>();
+	}
+
+	void Start () {
 		active = sphere.color;
 	}
-	
+
 	public void Act () {
 		if(cooldown) return;
 
