@@ -4,31 +4,39 @@ using System.Collections;
 public class SphereBehaviour : MonoBehaviour {
 	//THIS IS IN RADIANS
 	private float x,y,z,speed,currentAngle = 0;
-	private bool attached;
-
-	private Rigidbody2D rb;
-	private Color color;
+	public bool attached;
+	public Rigidbody2D rb;
+	public Color color;
+	public Material _material;
 	public CameraBehaviour _camera;
 	public PlanetAttributes currentPlanet;
-	private Vector2 direction;
+	public Vector2 direction;
+	private Fallback fb;
+
+	void Awake () {
+		z         = 10;
+		rb        = GetComponent<Rigidbody2D>();
+		fb        = GetComponent<Fallback>();
+		_material = GetComponent<Renderer>().material;
+		color     = _material.color;
+	}
 
 	void Start () {
-		z        = 10;
-		rb       = GetComponent<Rigidbody2D>();
-		color    = GetComponent<Renderer>().material.color;
 		SetCurrentPlanet(currentPlanet.gameObject, null);
 	}
 
 	void Update () {
-		//TODO : Separate control concern to SphereController.cs
-		if (Input.GetMouseButtonDown(0))
-			Detach();
+		if (Input.GetMouseButtonDown(0)){
+			if(attached)
+				Detach();
+			else
+				fb.Act();
+		}
 	}
 
 	public void Detach() {
 		float angle = GetAngle(new Vector2(x,y));
-		//TODO: Mechanics to return to currentPlanet
-		attached    = !attached;
+		attached    = false;
 		direction   = GetDirecton(angle);
 		rb.velocity = direction * 15/currentPlanet.radius;
 	}
@@ -68,15 +76,16 @@ public class SphereBehaviour : MonoBehaviour {
 			break;
 			case "Block":
 					BlockAttributes block = gameObject.GetComponent<BlockAttributes>();
-					block.ReceiveDamage ();
+					block.ReceiveDamage();
 			break;
 		}
 	}
 
 	void SetCurrentPlanet(GameObject gameObject, Collision2D collision) {
 		currentPlanet = gameObject.GetComponent<PlanetAttributes>();
+		fb.SetCooldown(currentPlanet.visited && fb.cooldown);
 		currentPlanet.SetColor(color);
-	    currentPlanet.visited = true;
+	  currentPlanet.visited = true;
 
 		attached = true;
 		speed = (2*Mathf.PI)/currentPlanet.radius;
