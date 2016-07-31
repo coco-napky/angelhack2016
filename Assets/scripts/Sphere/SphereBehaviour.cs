@@ -16,12 +16,14 @@ public class SphereBehaviour : MonoBehaviour {
 	void Awake () {
 		z         = 10;
 		rb        = GetComponent<Rigidbody2D>();
-		fb        = GetComponent<Fallback>();
 		_material = GetComponent<Renderer>().material;
 		color     = _material.color;
 	}
 
 	void Start () {
+		fb        = GetComponent<Fallback>();
+		fb.sphere = this;
+		fb.active = color;
 		SetCurrentPlanet(currentPlanet.gameObject, null);
 	}
 
