@@ -42,6 +42,19 @@ public class Fallback : MonoBehaviour {
 
 	public void SetCooldown (bool state) {
 		cooldown = state;
-		sphere._material.color = state ? inactive : active;
+
+		if(state)
+			tweenColor(sphere._material.color, inactive, 0.35f);
+		else
+		  tweenColor(sphere._material.color, active, 0.35f);
+  }
+
+	void UpdateColor (Color newColor) {
+		sphere._material.color = newColor;
+	}
+
+	void tweenColor (Color from, Color to, float time) {
+		iTween.ValueTo (gameObject, iTween.Hash ("from", from, "to", to, "time",
+										time, "easetype", "easeInCubic", "onUpdate","UpdateColor"));
 	}
 }
