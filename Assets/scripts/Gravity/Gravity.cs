@@ -5,7 +5,6 @@ public class Gravity : MonoBehaviour {
 
 	private PlanetAttributes planet;
 	private SphereBehaviour sphere;
-	private int counter = 0;
 	public float dividend;
 	public float offset;
 	void Awake () {

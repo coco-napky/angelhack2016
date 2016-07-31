@@ -5,18 +5,10 @@ public class Fallback : MonoBehaviour {
 
 	public bool cooldown = false;
 	private Vector2 direction;
-	private SphereBehaviour sphere;
+	public SphereBehaviour sphere;
 
 	public Color active;
 	public Color inactive;
-
-	void Awake () {
-		sphere = GetComponent<SphereBehaviour>();
-	}
-
-	void Start () {
-		active = sphere.color;
-	}
 
 	public void Act () {
 		if(cooldown) return;
