@@ -6,9 +6,10 @@ public class Gravity : MonoBehaviour {
 	private PlanetAttributes planet;
 	private SphereBehaviour sphere;
 	private int counter = 0;
+	public float dividend;
+	public float offset;
 	void Awake () {
 		planet = transform.parent.GetComponent<PlanetAttributes>();
-		Debug.Log(planet.center);
 	}
 
 	void FixedUpdate () {
@@ -24,16 +25,24 @@ public class Gravity : MonoBehaviour {
 		float distance = Vector2.Distance(currentPosition,planet.center);
 		float angle = Angler.GetAngle(currentPosition, planet.center);
 		Vector2 direction = Angler.GetDirecton(angle, 180f);
-    sphere.rb.AddForce(direction * distance * Time.deltaTime * 10);
-		Debug.Log(distance * Time.deltaTime);
+		float multiplier = Time.deltaTime * dividend/distance + offset;
+    sphere.rb.AddForce(direction * multiplier);
 	}
 
 	void OnTriggerEnter2D (Collider2D collider) {
 		GameObject gameObject = collider.gameObject;
-		Debug.Log("GRAVITY ENTER TO : " + gameObject.tag);
 		switch(gameObject.tag){
 			case "Player":
 				sphere = gameObject.GetComponent<SphereBehaviour>();
+			break;
+		}
+	}
+
+	void OnTriggerExit2D (Collider2D collider) {
+		GameObject gameObject = collider.gameObject;
+		switch(gameObject.tag){
+			case "Player":
+				sphere = null;
 			break;
 		}
 	}
