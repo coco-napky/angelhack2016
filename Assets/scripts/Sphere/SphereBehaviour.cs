@@ -6,19 +6,23 @@ public class SphereBehaviour : MonoBehaviour {
 	private float x,y,z,speed,currentAngle = 0;
 	public bool attached;
 	public Rigidbody2D rb;
-	private Color color;
+	public Color color;
+	public Material _material;
 	public CameraBehaviour _camera;
 	public PlanetAttributes currentPlanet;
 	public Vector2 direction;
 	private Fallback fb;
 
-	void Start () {
-		z        = 10;
-		rb       = GetComponent<Rigidbody2D>();
-		fb       = GetComponent<Fallback>();
-		color    = GetComponent<Renderer>().material.color;
-		SetCurrentPlanet(currentPlanet.gameObject, null);
+	void Awake () {
+		z         = 10;
+		rb        = GetComponent<Rigidbody2D>();
+		fb        = GetComponent<Fallback>();
+		_material = GetComponent<Renderer>().material;
+		color     = _material.color;
+	}
 
+	void Start () {
+		SetCurrentPlanet(currentPlanet.gameObject, null);
 	}
 
 	void Update () {
@@ -79,7 +83,7 @@ public class SphereBehaviour : MonoBehaviour {
 
 	void SetCurrentPlanet(GameObject gameObject, Collision2D collision) {
 		currentPlanet = gameObject.GetComponent<PlanetAttributes>();
-		fb.cooldown = currentPlanet.visited && fb.cooldown;
+		fb.SetCooldown(currentPlanet.visited && fb.cooldown);
 		currentPlanet.SetColor(color);
 	  currentPlanet.visited = true;
 
