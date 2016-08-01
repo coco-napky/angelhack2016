@@ -36,18 +36,18 @@ public class SphereBehaviour : MonoBehaviour {
 		}
 	}
 
-	public void Detach() {
-		float angle = GetAngle(new Vector2(x,y));
+	public void Detach () {
+		float angle = Angler.GetAngle(new Vector2(x,y), currentPlanet.center);
 		attached    = false;
-		direction   = GetDirecton(angle);
+		direction   = Angler.GetDirecton(angle, 90f);
 		rb.velocity = direction * 15/currentPlanet.radius;
 	}
 
-	void FixedUpdate() {
+	void FixedUpdate () {
 		Move();
 	}
 
-	void Move() {
+	void Move () {
 		if(!attached) return;
 
 		x = currentPlanet.center.x + Mathf.Cos (currentAngle) * currentPlanet.radius;
@@ -57,18 +57,7 @@ public class SphereBehaviour : MonoBehaviour {
 		rb.velocity = Vector2.zero;
 	}
 
-	//Gets the angle formed by a given point and the center of currentPlanet
-	float GetAngle(Vector2 point) {
-		float deltaX = point.x - currentPlanet.center.x;
-		float deltaY = point.y - currentPlanet.center.y;
-		return Mathf.Atan2(deltaY, deltaX) * 180/ Mathf.PI;
-	}
-
-	Vector3 GetDirecton(float angle) {
-		return Quaternion.AngleAxis(angle + 90f, Vector3.forward) * Vector3.right;
-	}
-
-	void OnCollisionEnter2D(Collision2D collision){
+	void OnCollisionEnter2D (Collision2D collision) {
 		if(attached) return;
 
 		GameObject gameObject = collision.gameObject;
@@ -83,18 +72,15 @@ public class SphereBehaviour : MonoBehaviour {
 		}
 	}
 
-	void SetCurrentPlanet(GameObject gameObject, Collision2D collision) {
+	void SetCurrentPlanet (GameObject gameObject, Collision2D collision) {
 		currentPlanet = gameObject.GetComponent<PlanetAttributes>();
 		fb.SetCooldown(currentPlanet.visited && fb.cooldown);
 		currentPlanet.SetColor(color);
-	    
 		attached = true;
-
 		speed = (2*Mathf.PI)/currentPlanet.radius;
 		rb.velocity = Vector2.zero;
 
-		//_camera.SetMovement(transform.position);
-		if(currentPlanet.waypoint && currentPlanet.visited == false)
+		if(currentPlanet.waypoint && !currentPlanet.visited)
 			_camera.ScrollCamera(currentPlanet.transform.position, currentPlanet.cameraDirection);
 
 		currentPlanet.visited = true;
@@ -109,4 +95,5 @@ public class SphereBehaviour : MonoBehaviour {
 			currentAngle = Mathf.Atan2(deltaY, deltaX);
 		}
 	}
+	
 }
