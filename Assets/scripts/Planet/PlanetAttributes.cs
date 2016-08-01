@@ -7,16 +7,12 @@ public class PlanetAttributes : MonoBehaviour {
     public bool visited = false;
 	public bool waypoint = false;
 
-
-	public Color waypointColor = new Color(42,221,115);
 	public int cameraDirection = 2;
 
 	//This happens before Start()
 	void Awake() {
 		SetCenter();
 		SetRadius();
-		if(waypoint)
-			this.SetColor (waypointColor);
 	}
 
     void FixedUpdate() {
