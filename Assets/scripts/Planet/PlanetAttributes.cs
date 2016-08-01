@@ -5,15 +5,13 @@ public class PlanetAttributes : MonoBehaviour {
 	public float radius;
     public Vector2 center;
     public bool visited = false;
-	public bool waypoint = false;
-
-	public int cameraDirection = 2;
 
 	//This happens before Start()
 	void Awake() {
 		SetCenter();
 		SetRadius();
 	}
+
 
     void FixedUpdate() {
 		SetCenter();
