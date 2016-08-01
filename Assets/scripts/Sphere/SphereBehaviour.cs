@@ -87,12 +87,17 @@ public class SphereBehaviour : MonoBehaviour {
 		currentPlanet = gameObject.GetComponent<PlanetAttributes>();
 		fb.SetCooldown(currentPlanet.visited && fb.cooldown);
 		currentPlanet.SetColor(color);
-	  currentPlanet.visited = true;
-
+	    
 		attached = true;
+
 		speed = (2*Mathf.PI)/currentPlanet.radius;
 		rb.velocity = Vector2.zero;
-		_camera.SetMovement(transform.position);
+
+		//_camera.SetMovement(transform.position);
+		if(currentPlanet.waypoint && currentPlanet.visited == false)
+			_camera.ScrollCamera(currentPlanet.transform.position, currentPlanet.cameraDirection);
+
+		currentPlanet.visited = true;
 
 		if(collision == null) return;
 
