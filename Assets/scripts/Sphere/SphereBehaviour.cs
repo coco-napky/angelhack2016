@@ -65,10 +65,6 @@ public class SphereBehaviour : MonoBehaviour {
 			case "Planet":
 				SetCurrentPlanet(gameObject, collision);
 			break;
-			case "Block":
-					BlockAttributes block = gameObject.GetComponent<BlockAttributes>();
-					block.ReceiveDamage();
-			break;
 			case "Goal":
 				Goal goal = gameObject.GetComponent<Goal> ();
 				goal.replayLevel ();
@@ -99,5 +95,5 @@ public class SphereBehaviour : MonoBehaviour {
 			currentAngle = Mathf.Atan2(deltaY, deltaX);
 		}
 	}
-	
+
 }
