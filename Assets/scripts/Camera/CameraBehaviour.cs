@@ -18,7 +18,9 @@ public class CameraBehaviour : MonoBehaviour {
 				destiny = new Vector3 (destiny.x, destiny.y + 7, -10);
 				break;
 		}
-		iTween.MoveTo (gameObject, iTween.Hash ("position", destiny, "time", 3f, "oncomplete", "setPosAndSpeed", "oncompletetarget", gameObject));
+		float distance = Vector3.Distance(destiny, transform.position);
+		float seconds  = distance/4;
+		iTween.MoveTo (gameObject, iTween.Hash ("position", destiny, "time", seconds, "oncomplete", "setPosAndSpeed", "oncompletetarget", gameObject));
 	}
 
 }
