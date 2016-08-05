@@ -5,7 +5,9 @@ public class BlockAttributes : MonoBehaviour {
 	public Color currentColor;
 	public int hp;
 	public bool destroyable = true;
+	public AudioSource audio;
 	private Renderer _renderer;
+
 	// Use this for initialization
 	void Start () {
 		hp = 3;
@@ -16,12 +18,15 @@ public class BlockAttributes : MonoBehaviour {
     else
 			ColorUtility.TryParseHtmlString ("#616161FF", out currentColor);
 		_renderer.material.color = currentColor;
+
+		audio = GetComponent<AudioSource>();
 	}
 
 	public void ReceiveDamage() {
 		if (!destroyable) return;
 
 		hp--;
+		audio.Play ();
 		switch (hp) {
 			case 0:
 				Destroy(gameObject);

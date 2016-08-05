@@ -69,6 +69,10 @@ public class SphereBehaviour : MonoBehaviour {
 					BlockAttributes block = gameObject.GetComponent<BlockAttributes>();
 					block.ReceiveDamage();
 			break;
+			case "Goal":
+				Goal goal = gameObject.GetComponent<Goal> ();
+				goal.replayLevel ();
+			break;
 		}
 	}
 

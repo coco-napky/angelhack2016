@@ -8,7 +8,6 @@ public class PlanetAttributes : MonoBehaviour {
 	public bool waypoint = false;
 	private Renderer _renderer;
 
-	public Color waypointColor = new Color(42,221,115);
 	public int cameraDirection = 2;
 
 	//This happens before Start()
@@ -16,9 +15,6 @@ public class PlanetAttributes : MonoBehaviour {
 		_renderer = GetComponent<Renderer>();
 		SetCenter();
 		SetRadius();
-
-		if(waypoint)
-			SetColor(waypointColor);
 
 	}
 

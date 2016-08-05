@@ -19,34 +19,29 @@ public class CameraBehaviour : MonoBehaviour {
 		Move();
 	}
 
-	public void SetMovement(Vector3 destiny) {
-		float nextValueY = destiny.y > (transform.position.y) ? destiny.y + offset : transform.position.y;
-		this.destiny = new Vector3(destiny.x, nextValueY, -10);
-		origin       = transform.position;
-		startTime    = Time.time;
-		length       = Vector3.Distance(origin, destiny);
-		moving       = true;
-	}
-
 	public void ScrollCamera(Vector3 destiny, int scrollOption){
+		
 		switch (scrollOption){
 			case 1: //scroll to the top left of the current planet
-				this.destiny = new Vector3 (destiny.x - 10, destiny.y + 7, -10);
+				destiny = new Vector3 (destiny.x - 10, destiny.y + 7, -10);
+				iTween.MoveTo (gameObject, iTween.Hash ("position", destiny, "time", 3.0f, "oncomplete", "setPosAndSpeed", "oncompletetarget", gameObject));
 				break;
+
 			case 2: //scroll to the top
-				this.destiny = new Vector3 (destiny.x, destiny.y + 7, -10);
+				destiny = new Vector3 (destiny.x, destiny.y + 7, -10);
+				iTween.MoveTo (gameObject, iTween.Hash ("position", destiny, "time", 3.0f, "oncomplete", "setPosAndSpeed", "oncompletetarget", gameObject));
 				break;
+
 			case 3: //scroll to the top right of the current planet
-			this.destiny = new Vector3 (destiny.x + 10, destiny.y + 7, -10);
+			    destiny = new Vector3 (destiny.x + 10, destiny.y + 7, -10);
+				iTween.MoveTo (gameObject, iTween.Hash ("position", destiny, "time", 3.0f, "oncomplete", "setPosAndSpeed", "oncompletetarget", gameObject));
 				break;
 			default:
-				this.destiny = new Vector3 (destiny.x, destiny.y + 7, -10);
+				
+				destiny = new Vector3 (destiny.x, destiny.y + 7, -10);
+				iTween.MoveTo (gameObject, iTween.Hash ("position", destiny, "time", 3.0f, "oncomplete", "setPosAndSpeed", "oncompletetarget", gameObject));
 				break;
 		}
-		origin       = transform.position;
-		startTime    = Time.time;
-		length       = Vector3.Distance(origin, destiny);
-		moving       = true;
 	}
 
 	void Move() {
