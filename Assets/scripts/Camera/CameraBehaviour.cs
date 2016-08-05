@@ -19,15 +19,6 @@ public class CameraBehaviour : MonoBehaviour {
 		Move();
 	}
 
-	public void SetMovement(Vector3 destiny) {
-		float nextValueY = destiny.y > (transform.position.y) ? destiny.y + offset : transform.position.y;
-		this.destiny = new Vector3(destiny.x, nextValueY, -10);
-		origin       = transform.position;
-		startTime    = Time.time;
-		length       = Vector3.Distance(origin, destiny);
-		moving       = true;
-	}
-
 	public void ScrollCamera(Vector3 destiny, int scrollOption){
 		
 		switch (scrollOption){
