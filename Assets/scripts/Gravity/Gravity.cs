@@ -7,10 +7,15 @@ public class Gravity : MonoBehaviour {
 	private SphereBehaviour sphere;
 	public float dividend;
 	public float offset;
+	public CircleCollider2D collider;
 	void Awake () {
 		planet = transform.parent.GetComponent<PlanetAttributes>();
+		collider = GetComponent<CircleCollider2D>();
 	}
 
+	void Start () {
+		collider.radius = planet.radius/2;
+	}
 	void FixedUpdate () {
 		if(sphere == null) return;
 
