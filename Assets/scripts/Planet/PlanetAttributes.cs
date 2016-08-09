@@ -7,7 +7,6 @@ public class PlanetAttributes : MonoBehaviour {
   public bool visited = false;
 	public bool waypoint = false;
 	private Renderer _renderer;
-
 	public int cameraDirection = 2;
 
 	//This happens before Start()
