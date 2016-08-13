@@ -2,9 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class PlatformController : RaycastController {
+public class PlatformController : MonoBehaviour {
 
-	public LayerMask passengerMask;
+	public enum ROTATION_DIRECTION{CLOCKWISE=-1, COUNTERCLOCKWISE=1}
+
+	//public LayerMask passengerMask;
 
 	public Vector3[] localWaypoints;
 	Vector3[] globalWaypoints;
@@ -15,14 +17,29 @@ public class PlatformController : RaycastController {
 	[Range(0,2)]
 	public float easeAmount;
 
+	public bool rotating;
+	public ROTATION_DIRECTION rotatingDirection;
+	public float rotationSpeed;
+
+
 	int fromWaypointIndex;
 	float percentBetweenWaypoints;
 	float nextMoveTime;
 
-	public override void Start () {
-		base.Start ();
+	public void Start () {
+		//base.Start ();
 
-		globalWaypoints = new Vector3[localWaypoints.Length];
+		if (localWaypoints.Length < 1) {
+			globalWaypoints = new Vector3[1];
+			localWaypoints [0] = new Vector3 (0, 0, 0);
+		}
+		else
+			globalWaypoints = new Vector3[localWaypoints.Length];
+
+		if (speed < 1)
+			speed = 1;
+
+
 		for (int i =0; i < localWaypoints.Length; i++) {
 			globalWaypoints[i] = localWaypoints[i] + transform.position;
 		}
@@ -30,10 +47,14 @@ public class PlatformController : RaycastController {
 
 	void Update () {
 
-		UpdateRaycastOrigins ();
-
+		//UpdateRaycastOrigins ();
 		Vector3 velocity = CalculatePlatformMovement();
-		transform.Translate (velocity);
+
+		if (rotating) {
+			RotatingPlatform ();
+			transform.Translate (velocity, Space.World);
+		}else
+			transform.Translate (velocity, Space.Self);
 	}
 
 	float Ease(float x) {
@@ -70,6 +91,11 @@ public class PlatformController : RaycastController {
 		}
 
 		return newPos - transform.position;
+	}
+
+	void RotatingPlatform()
+	{
+		transform.Rotate (new Vector3(0,0,(float)rotatingDirection), rotationSpeed);
 	}
 
 	void OnDrawGizmos() {
