@@ -3,7 +3,8 @@ using System.Collections;
 
 public class SphereBehaviour : MonoBehaviour {
 	//THIS IS IN RADIANS
-	private float x,y,z,speed,currentAngle = 0;
+	public float speed = 0;
+	private float x,y,z,currentAngle = 0;
 	public bool attached;
 	public Rigidbody2D rb;
 	public Color color;
